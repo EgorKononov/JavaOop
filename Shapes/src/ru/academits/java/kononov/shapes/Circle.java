@@ -7,6 +7,10 @@ public class Circle implements Shape {
         this.radius = radius;
     }
 
+    public double getRadius() {
+        return radius;
+    }
+
     public void setRadius(double radius) {
         this.radius = radius;
     }
@@ -33,7 +37,7 @@ public class Circle implements Shape {
 
     @Override
     public String toString() {
-        return "(" + radius + ", " + this.getArea() + ", " + this.getPerimeter() + ")";
+        return "Circle (radius = " + radius + ", Area = " + getArea() + ", Perimeter = " + getPerimeter() + ")";
     }
 
     @Override
@@ -43,11 +47,11 @@ public class Circle implements Shape {
 
     @Override
     public boolean equals(Object o) {
-        if (o == this){
+        if (o == this) {
             return true;
         }
 
-        if (o == null || o.getClass() != this.getClass()){
+        if (o == null || o.getClass() != getClass()) {
             return false;
         }
 

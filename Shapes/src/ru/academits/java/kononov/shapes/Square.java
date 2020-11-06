@@ -1,58 +1,62 @@
 package ru.academits.java.kononov.shapes;
 
 public class Square implements Shape {
-    private double width;
+    private double sideLength;
 
-    public Square(double width) {
-        this.width = width;
+    public Square(double sideLength) {
+        this.sideLength = sideLength;
     }
 
-    public void setWidth(double width) {
-        this.width = width;
+    public double getSideLength() {
+        return sideLength;
+    }
+
+    public void setSideLength(double sideLength) {
+        this.sideLength = sideLength;
     }
 
     @Override
     public double getWidth() {
-        return width;
+        return sideLength;
     }
 
     @Override
     public double getHeight() {
-        return width;
+        return sideLength;
     }
 
     @Override
     public double getArea() {
-        return Math.pow(width, 2);
+        return Math.pow(sideLength, 2);
     }
 
     @Override
     public double getPerimeter() {
-        return width * 4;
+        return sideLength * 4;
     }
 
     @Override
     public String toString() {
-        return "(" + width + ", " + this.getArea() + ", " + this.getPerimeter() + ")";
+        return "Square (sideLength = " + sideLength + ", Area = " + getArea() + ", Perimeter = " + getPerimeter() + ")";
     }
 
     @Override
     public int hashCode() {
-        return Double.hashCode(width);
+        return Double.hashCode(sideLength);
     }
 
     @Override
     public boolean equals(Object o) {
-        if (o == this){
+        if (o == this) {
             return true;
         }
 
-        if (o == null || o.getClass() != this.getClass()){
+        if (o == null || o.getClass() != getClass()) {
             return false;
         }
 
         Square square = (Square) o;
 
-        return width == square.width;
+        return sideLength == square.sideLength;
     }
 }

@@ -19,12 +19,12 @@ public class Rectangle implements Shape {
 
     @Override
     public double getWidth() {
-        return 0;
+        return width;
     }
 
     @Override
     public double getHeight() {
-        return 0;
+        return height;
     }
 
     @Override
@@ -39,7 +39,7 @@ public class Rectangle implements Shape {
 
     @Override
     public String toString() {
-        return "(" + width + " " + height + ", " + this.getArea() + ", " + this.getPerimeter() + ")";
+        return "Rectangle (width = " + width + ", height = " + height + ", Area = " + getArea() + ", Perimeter = " + getPerimeter() + ")";
     }
 
     @Override
@@ -54,12 +54,12 @@ public class Rectangle implements Shape {
     }
 
     @Override
-    public boolean equals(Object o){
-        if (o == this){
+    public boolean equals(Object o) {
+        if (o == this) {
             return true;
         }
 
-        if (o == null || o.getClass() != this.getClass()){
+        if (o == null || o.getClass() != getClass()) {
             return false;
         }
 
