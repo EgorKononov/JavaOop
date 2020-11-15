@@ -37,7 +37,7 @@ public class Circle implements Shape {
 
     @Override
     public String toString() {
-        return "Circle (radius = " + radius + ", Area = " + getArea() + ", Perimeter = " + getPerimeter() + ")";
+        return "Circle (Radius = " + radius + ", Area = " + getArea() + ", Perimeter = " + getPerimeter() + ")";
     }
 
     @Override

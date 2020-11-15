@@ -21,61 +21,50 @@ public class Triangle implements Shape {
         return x1;
     }
 
-    public double getY1() {
-        return y1;
-    }
-
-    public double getX2() {
-        return x2;
-    }
-
-    public double getY2() {
-        return y2;
-    }
-
-    public double getX3() {
-        return x3;
-    }
-
-    public double getY3() {
-        return y3;
-    }
-
     public void setX1(double x1) {
         this.x1 = x1;
+    }
+
+    public double getY1() {
+        return y1;
     }
 
     public void setY1(double y1) {
         this.y1 = y1;
     }
 
+    public double getX2() {
+        return x2;
+    }
+
     public void setX2(double x2) {
         this.x2 = x2;
+    }
+
+    public double getY2() {
+        return y2;
     }
 
     public void setY2(double y2) {
         this.y2 = y2;
     }
 
+    public double getX3() {
+        return x3;
+    }
+
     public void setX3(double x3) {
         this.x3 = x3;
+    }
+
+    public double getY3() {
+        return y3;
     }
 
     public void setY3(double y3) {
         this.y3 = y3;
     }
 
-    private double getSide12Length() {
-        return Math.sqrt(Math.pow((x2 - x1), 2) + Math.pow((y2 - y1), 2));
-    }
-
-    private double getSide23Length() {
-        return Math.sqrt(Math.pow((x3 - x2), 2) + Math.pow((y3 - y2), 2));
-    }
-
-    private double getSide31Length() {
-        return Math.sqrt(Math.pow((x3 - x1), 2) + Math.pow((y3 - y1), 2));
-    }
 
     @Override
     public double getWidth() {
@@ -87,17 +76,28 @@ public class Triangle implements Shape {
         return Math.max(y1, Math.max(y2, y3)) - Math.min(y1, Math.min(y2, y3));
     }
 
-    @Override
-    public double getArea() {
-        double triangleSemiPerimeter = (getSide12Length() + getSide23Length() + getSide31Length()) / 2;
-
-        return Math.sqrt(triangleSemiPerimeter * (triangleSemiPerimeter - getSide12Length()) *
-                (triangleSemiPerimeter - getSide23Length()) * (triangleSemiPerimeter - getSide31Length()));
+    private double getSideLength(double x1, double y1, double x2, double y2) {
+        return Math.sqrt(Math.pow((x2 - x1), 2) + Math.pow((y2 - y1), 2));
     }
 
     @Override
     public double getPerimeter() {
-        return getSide12Length() + getSide23Length() + getSide31Length();
+        double side12Length = getSideLength(x1, y1, x2, y2);
+        double side23Length = getSideLength(x2, y2, x3, y3);
+        double side31Length = getSideLength(x3, y3, x1, y1);
+
+        return side12Length + side23Length + side31Length;
+    }
+
+    @Override
+    public double getArea() {
+        double side12Length = getSideLength(x1, y1, x2, y2);
+        double side23Length = getSideLength(x2, y2, x3, y3);
+        double side31Length = getSideLength(x3, y3, x1, y1);
+        double triangleSemiPerimeter = (side12Length + side23Length + side31Length) / 2;
+
+        return Math.sqrt(triangleSemiPerimeter * (triangleSemiPerimeter - side12Length) *
+                (triangleSemiPerimeter - side23Length) * (triangleSemiPerimeter - side31Length));
     }
 
     @Override
