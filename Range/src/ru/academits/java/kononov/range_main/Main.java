@@ -12,12 +12,12 @@ public class Main {
         System.out.println("Первый диапазон: (0; 100)");
 
         System.out.println("Введите начальное число второго диапазона:");
-        double range2From = scanner.nextDouble();
+        double from = scanner.nextDouble();
 
         System.out.println("Введите конечное число второго диапазона:");
-        double range2To = scanner.nextDouble();
+        double to = scanner.nextDouble();
 
-        return new Range(range2From, range2To);
+        return new Range(from, to);
     }
 
     public static void main(String[] args) {
@@ -89,7 +89,7 @@ public class Main {
             if (union.length == 1) {
                 System.out.println("Объединением данных диапазонов является диапазон " + union[0].toString());
             } else {
-                System.out.println("Объединением данных диапазонов являются диапазоны: "  + Arrays.toString(union));
+                System.out.println("Объединением данных диапазонов являются диапазоны: " + Arrays.toString(union));
             }
         } else if (option == 4) {
             Range range2 = createRange();
@@ -104,7 +104,7 @@ public class Main {
                 System.out.println("Разностью данных диапазонов являются диапазоны: " + Arrays.toString(complement));
             }
         } else {
-            System.out.println("Введен направильный вариант");
+            System.out.println("Введен неправильный вариант");
         }
     }
 }
