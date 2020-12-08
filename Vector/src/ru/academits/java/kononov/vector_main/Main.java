@@ -18,20 +18,27 @@ public class Main {
         System.out.println(vector3);
 
         System.out.println("Конструктор 4");
-        Vector vector4 = new Vector(4, components);
+        Vector vector4 = new Vector(6, components);
         System.out.println(vector4);
 
         double[] components2 = {1, 2, 3, 4};
         Vector vector5 = new Vector(components2);
 
         System.out.println("Прибавление к вектору другого вектора");
-        System.out.println(vector2.add(vector5));
+        vector2.add(vector5);
+        System.out.println(vector2);
 
         System.out.println("Вычитание из вектора другого вектора");
-        System.out.println(vector2.subtract(vector5));
+        vector2.subtract(vector5);
+        System.out.println(vector2);
 
         System.out.println("Умножение вектора на скаляр");
-        System.out.println(vector2.scalarMultiply(2));
+        vector2.multiplyByScalar(2);
+        System.out.println(vector2);
+
+        System.out.println("Разворот вектора");
+        vector2.turn();
+        System.out.println(vector2);
 
         System.out.println("Получение длины вектора");
         System.out.println(vector2.getLength());
@@ -44,12 +51,12 @@ public class Main {
         System.out.println(vector2);
 
         System.out.println("Сложение двух векторов ");
-        System.out.println(Vector.getAddition(vector2, vector5));
+        System.out.println(Vector.getSum(vector2, vector5));
 
         System.out.println("Вычитание векторов");
-        System.out.println(Vector.getSubtraction(vector2, vector5));
+        System.out.println(Vector.getDifference(vector2, vector5));
 
         System.out.println("Скалярное произведение векторов");
-        System.out.println(Vector.getScalarMultiplication(vector2, vector5));
+        System.out.println(Vector.getScalarProduct(vector2, vector5));
     }
 }
