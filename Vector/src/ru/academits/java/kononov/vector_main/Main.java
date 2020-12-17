@@ -21,6 +21,9 @@ public class Main {
         Vector vector4 = new Vector(6, components);
         System.out.println(vector4);
 
+        System.out.println("Получение длины вектора");
+        System.out.println(vector4.getSize());
+
         double[] components2 = {1, 2, 3, 4};
         Vector vector5 = new Vector(components2);
 
