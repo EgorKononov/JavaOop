@@ -28,7 +28,7 @@ public class Vector {
 
     public Vector(int size, double[] components) {
         if (size <= 0) {
-            throw new IllegalArgumentException(size + " - неверное значение размерности вектора. Размерность вектора должна быть целым положительным числом.");
+            throw new IllegalArgumentException(size + " - неверное значение размерности вектора. Размерность вектора должна быть положительным числом.");
         }
 
         this.components = Arrays.copyOf(components, size);
@@ -39,25 +39,21 @@ public class Vector {
     }
 
     public void add(Vector vector) {
-        int vectorSize = vector.components.length;
-
-        if (vectorSize > components.length) {
-            components = Arrays.copyOf(components, vectorSize);
+        if (vector.components.length > components.length) {
+            components = Arrays.copyOf(components, vector.components.length);
         }
 
-        for (int i = 0; i < vectorSize; i++) {
+        for (int i = 0; i < vector.components.length; i++) {
             components[i] += vector.components[i];
         }
     }
 
     public void subtract(Vector vector) {
-        int vectorSize = vector.components.length;
-
-        if (vectorSize > components.length) {
-            components = Arrays.copyOf(components, vectorSize);
+        if (vector.components.length > components.length) {
+            components = Arrays.copyOf(components, vector.components.length);
         }
 
-        for (int i = 0; i < vectorSize; i++) {
+        for (int i = 0; i < vector.components.length; i++) {
             components[i] -= vector.components[i];
         }
     }
@@ -128,8 +124,7 @@ public class Vector {
         StringBuilder sb = new StringBuilder();
         sb.append("{");
 
-        for (double e :
-                components) {
+        for (double e : components) {
             sb.append(e).append(", ");
         }
 
