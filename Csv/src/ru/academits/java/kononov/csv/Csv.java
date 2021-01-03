@@ -3,6 +3,7 @@ package ru.academits.java.kononov.csv;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class Csv {
@@ -81,14 +82,23 @@ public class Csv {
         }
     }
 
-    public static void main(String[] args) throws FileNotFoundException {
-        if (args.length != 2) {
-            System.out.println("Неверно заданы аргументы.");
-            System.out.println("Необходимо задать агументы:");
-            System.out.println("Аргумент 1 - путь к существующему файлу CSV таблицы");
-            System.out.println("Аргумент 2 - путь к создаваемому HTML файлу");
-        } else {
-            convertCsvTableToHtmlTable(args[0], args[1]);
+    public static void main(String[] args) {
+        try {
+            if (args.length != 2) {
+                System.out.println("Неверно заданы аргументы.");
+                System.out.println("Необходимо задать агументы:");
+                System.out.println("Аргумент 1 - путь к существующему файлу CSV таблицы");
+                System.out.println("Аргумент 2 - путь к создаваемому HTML файлу");
+            } else {
+                convertCsvTableToHtmlTable(args[0], args[1]);
+            }
+
+        } catch (FileNotFoundException e) {
+            if (Arrays.toString(e.getStackTrace()).contains("java.base/java.io.FileInputStream")) {
+                System.out.println("Неверный  путь к существующему файлу CSV таблицы");
+            } else {
+                System.out.println("Неверный путь к создаваемому файлу HTML таблицы");
+            }
         }
     }
 }
