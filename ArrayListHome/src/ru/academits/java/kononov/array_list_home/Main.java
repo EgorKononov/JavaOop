@@ -4,48 +4,72 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.Scanner;
 
 public class Main {
-    public static void main(String[] args) throws FileNotFoundException {
-        ArrayList<String> strings = new ArrayList<>();
+    public static ArrayList<String> getStringsFromFile(String fileName) {
+        ArrayList<String> stringsFromFile = new ArrayList<>();
 
-        try (Scanner scanner = new Scanner(new FileInputStream("ArrayListHome\\Input.txt"))) {
+        try (Scanner scanner = new Scanner(new FileInputStream(fileName))) {
             while (scanner.hasNextLine()) {
-                strings.add(scanner.nextLine());
+                stringsFromFile.add(scanner.nextLine());
             }
+        } catch (FileNotFoundException e) {
+            System.out.println("Неправильно указан путь к файлу");
         }
 
-        System.out.println(strings);
+        return stringsFromFile;
+    }
 
-        ArrayList<Integer> numbers = new ArrayList<>(Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10));
-
-        for (Iterator<Integer> i = numbers.iterator(); i.hasNext(); ) {
-            int number = i.next();
-
-            if (number % 2 == 0) {
-                i.remove();
+    public static void removeEvenNumbersFromArrayList(ArrayList<Integer> arrayList) {
+        for (int i = 0; i < arrayList.size(); i++) {
+            if (arrayList.get(i) % 2 == 0) {
+                arrayList.remove(i);
             }
         }
+    }
 
-        System.out.println(numbers);
+    public static ArrayList<Integer> getArrayListWithoutRepeatedNumbers(ArrayList<Integer> arrayList) {
+        ArrayList<Integer> arrayListWithoutRepeatedNumbers = new ArrayList<>();
 
-        ArrayList<Integer> numbers2 = new ArrayList<>(Arrays.asList(1, 2, 2, 3, 4, 5, 2, 6, 7, 1, 8, 9, 5, 10));
+        for (Integer e1 : arrayList) {
+            boolean isNumberRepeat = false;
 
-        for (int i = 0; i < numbers2.size(); ++i) {
-            int checkableNumber = numbers2.get(i);
-
-            for (Iterator<Integer> j = numbers2.listIterator(i + 1); j.hasNext(); ) {
-                int number = j.next();
-
-                if (number == checkableNumber) {
-                    j.remove();
+            for (Integer e2 : arrayListWithoutRepeatedNumbers) {
+                if (e1.equals(e2)) {
+                    isNumberRepeat = true;
+                    break;
                 }
             }
 
+            if(!isNumberRepeat){
+                arrayListWithoutRepeatedNumbers.add(e1);
+            }
         }
 
-        System.out.println(numbers2);
+        return arrayListWithoutRepeatedNumbers;
+    }
+
+
+    public static void main(String[] args) {
+        ArrayList<String> stringsFromFile = getStringsFromFile("ArrayListHome\\Input.txt");
+        System.out.println("Список на массиве со строками из файла:");
+        System.out.println(stringsFromFile);
+        System.out.println();
+
+        ArrayList<Integer> numbers = new ArrayList<>(Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10));
+        System.out.println("Исходный список на массиве:");
+        System.out.println(numbers);
+        removeEvenNumbersFromArrayList(numbers);
+        System.out.println("Список на массиве без четных чисел:");
+        System.out.println(numbers);
+        System.out.println();
+
+        ArrayList<Integer> arrayListWithRepeatedNumbers = new ArrayList<>(Arrays.asList(1, 2, 2, 3, 4, 5, 2, 6, 7, 1, 8, 9, 5, 10));
+        System.out.println("Исходный список на массиве:");
+        System.out.println(arrayListWithRepeatedNumbers);
+        ArrayList<Integer> arrayListWithoutRepeatedNumbers = getArrayListWithoutRepeatedNumbers(arrayListWithRepeatedNumbers);
+        System.out.println("Список на массиве без повторяющихся чисел:");
+        System.out.println(arrayListWithoutRepeatedNumbers);
     }
 }
