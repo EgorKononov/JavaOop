@@ -25,6 +25,7 @@ public class Main {
         for (int i = 0; i < arrayList.size(); i++) {
             if (arrayList.get(i) % 2 == 0) {
                 arrayList.remove(i);
+                --i;
             }
         }
     }
