@@ -21,7 +21,7 @@ public class Main {
         return stringsFromFile;
     }
 
-    public static void removeEvenNumbersFromAList(ArrayList<Integer> list) {
+    public static void removeEvenNumbersFromList(ArrayList<Integer> list) {
         for (int i = 0; i < list.size(); i++) {
             if (list.get(i) % 2 == 0) {
                 list.remove(i);
@@ -51,7 +51,7 @@ public class Main {
         ArrayList<Integer> numbers = new ArrayList<>(Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10));
         System.out.println("Исходный список на массиве:");
         System.out.println(numbers);
-        removeEvenNumbersFromAList(numbers);
+        removeEvenNumbersFromList(numbers);
         System.out.println("Список на массиве без четных чисел:");
         System.out.println(numbers);
         System.out.println();

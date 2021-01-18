@@ -1,4 +1,4 @@
-package ru.academits.java.kononov.main;
+package ru.academits.java.kononov.lambda_expressions_main;
 
 import ru.academits.java.kononov.person.Person;
 
@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 
 public class Main {
     public static void main(String[] args) {
-        List<Person> persons = new LinkedList<>(Arrays.asList(
+        List<Person> persons = Arrays.asList(
                 new Person("Иван", 23),
                 new Person("Семен", 23),
                 new Person("Ольга", 6),
@@ -17,7 +17,7 @@ public class Main {
                 new Person("Елена", 41),
                 new Person("Алексей", 24),
                 new Person("Антон", 12)
-        ));
+        );
 
         System.out.println("Список людей");
         System.out.println(persons);
@@ -33,10 +33,8 @@ public class Main {
 
         System.out.println("Список уникальных имен строкой");
 
-        String distinctNamesString = persons.stream()
-                .map(Person::getName)
-                .distinct()
-                .collect(Collectors.joining(", "));
+        String distinctNamesString = distinctNamesList.stream()
+                .collect(Collectors.joining(", ", "Имена: ", "."));
 
         System.out.println(distinctNamesString);
 
@@ -47,7 +45,11 @@ public class Main {
                 .mapToInt(Person::getAge)
                 .average();
 
-        System.out.println(averageAge);
+        if (averageAge.isPresent()) {
+            System.out.println(averageAge.getAsDouble());
+        } else {
+            System.out.println("В списке нет людей младше 18 лет");
+        }
 
         System.out.println("Map, в котором ключи - это имена, а значения - средний возраст");
 
@@ -58,12 +60,12 @@ public class Main {
 
         System.out.println("Список людей, возраст которых от 20 до 45, в порядке убывания возраста");
 
-        String sortedNamesSting = persons.stream()
-                .filter(p -> p.getAge() > 20 && p.getAge() < 45)
+        String sortedNamesString = persons.stream()
+                .filter(p -> p.getAge() >= 20 && p.getAge() <= 45)
                 .sorted((p1, p2) -> p2.getAge() - p1.getAge())
                 .map(Person::getName)
                 .collect(Collectors.joining(", "));
 
-        System.out.println(sortedNamesSting);
+        System.out.println(sortedNamesString);
     }
 }
