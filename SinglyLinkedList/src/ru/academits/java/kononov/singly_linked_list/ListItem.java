@@ -1,31 +1,31 @@
 package ru.academits.java.kononov.singly_linked_list;
 
-public class ListItem<T> {
+class ListItem<T> {
     private T data;
     private ListItem<T> next;
 
-    ListItem(T data) {
+    public ListItem(T data) {
         this.data = data;
     }
 
-    ListItem(T data, ListItem<T> next) {
+    public ListItem(T data, ListItem<T> next) {
         this.data = data;
         this.next = next;
     }
 
-    T getData() {
+    public T getData() {
         return data;
     }
 
-    void setData(T data) {
+    public void setData(T data) {
         this.data = data;
     }
 
-    ListItem<T> getNext() {
+    public ListItem<T> getNext() {
         return next;
     }
 
-    void setNext(ListItem<T> next) {
+    public void setNext(ListItem<T> next) {
         this.next = next;
     }
 }
