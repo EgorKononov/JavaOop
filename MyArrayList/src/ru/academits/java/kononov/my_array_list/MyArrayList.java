@@ -13,13 +13,17 @@ public class MyArrayList<E> implements List<E> {
     }
 
     public MyArrayList(int capacity) {
+        if (capacity <= 0) {
+            throw new IllegalArgumentException(capacity + " - неверное значение вместимости. Вместимость должна быть больше нуля");
+        }
+
         //noinspection unchecked
         items = (E[]) new Object[capacity];
     }
 
     private class MyArrayListIterator implements Iterator<E> {
         private int currentIndex = -1;
-        private final int FIXED_MOD_COUNT = modCount;
+        private final int initialModCount = modCount;
 
         @Override
         public boolean hasNext() {
@@ -28,12 +32,12 @@ public class MyArrayList<E> implements List<E> {
 
         @Override
         public E next() {
-            if (currentIndex >= size - 1) {
+            if (!hasNext()) {
                 throw new NoSuchElementException("Невозможно перейти к следующему элементу. В списке отсутствует следующий элемент");
             }
 
-            if (modCount != FIXED_MOD_COUNT) {
-                throw new ConcurrentModificationException("Невозможно перейти к следующему элементу. В списке изменилось количество элементов");
+            if (modCount != initialModCount) {
+                throw new ConcurrentModificationException("Невозможно перейти к следующему элементу. Коллекция изменилась");
             }
 
             ++currentIndex;
@@ -41,25 +45,31 @@ public class MyArrayList<E> implements List<E> {
         }
     }
 
-    private void increaseCapacity() {
-        items = Arrays.copyOf(items, items.length * 2);
+    private void checkIndex(int index, int maxIndex) {
+        if (index < 0 || index > maxIndex) {
+            throw new IndexOutOfBoundsException(index + " - неверное значение индекса. Индекс должен находится в " +
+                    "пределах от 0 до " + maxIndex);
+        }
     }
 
-    private E removeLastElement() {
-        --size;
-        ++modCount;
-
-        return items[size];
+    private void increaseCapacity() {
+        if (items.length == 0) {
+            items = Arrays.copyOf(items, 10);
+        } else {
+            items = Arrays.copyOf(items, items.length * 2);
+        }
     }
 
     public void ensureCapacity(int capacity) {
-        if (capacity > size) {
+        if (capacity > items.length) {
             items = Arrays.copyOf(items, capacity);
         }
     }
 
     public void trimToSize() {
-        items = Arrays.copyOf(items, size);
+        if (items.length > size) {
+            items = Arrays.copyOf(items, size);
+        }
     }
 
     @Override
@@ -89,19 +99,24 @@ public class MyArrayList<E> implements List<E> {
 
     @Override
     public <T> T[] toArray(T[] a) {
+        if (a.length >= size) {
+            System.arraycopy(items, 0, a, 0, size);
+
+            for (int i = size; i < a.length; ++i) {
+                a[i] = null;
+            }
+
+            return a;
+        }
+
         //noinspection unchecked
         return (T[]) Arrays.copyOf(items, size, a.getClass());
     }
 
     @Override
-    public boolean add(E element) {
-        if (size == items.length) {
-            increaseCapacity();
-        }
+    public boolean add(E item) {
+        add(size, item);
 
-        items[size] = element;
-        ++size;
-        ++modCount;
         return true;
     }
 
@@ -131,29 +146,50 @@ public class MyArrayList<E> implements List<E> {
 
     @Override
     public boolean addAll(Collection<? extends E> c) {
-        for (E e : c) {
-            add(e);
-        }
+        addAll(size, c);
 
         return true;
     }
 
     @Override
     public boolean addAll(int index, Collection<? extends E> c) {
-        int i = 0;
+        checkIndex(index, size);
+
+        int collectionSize = c.size();
+
+        if (collectionSize == 0) {
+            return true;
+        }
+
+        if (index == size) {
+            if (items.length < size + collectionSize) {
+                items = Arrays.copyOf(items, items.length + collectionSize);
+            }
+        } else {
+            System.arraycopy(items, index, items, index + collectionSize, size - index);
+        }
+
+        int i = index;
 
         for (E e : c) {
-            add(index + i, e);
+            items[i] = e;
             ++i;
         }
+
+        size = size + collectionSize;
+        ++modCount;
 
         return true;
     }
 
     @Override
     public boolean removeAll(Collection<?> c) {
+        if (c.size() == 0) {
+            return true;
+        }
+
         for (int i = 0; i < size; ++i) {
-            if (c.contains(get(i))) {
+            if (c.contains(items[i])) {
                 remove(i);
                 --i;
             }
@@ -164,8 +200,12 @@ public class MyArrayList<E> implements List<E> {
 
     @Override
     public boolean retainAll(Collection<?> c) {
+        if (c.size() == 0) {
+            return true;
+        }
+
         for (int i = 0; i < size; ++i) {
-            if (!c.contains(get(i))) {
+            if (!c.contains(items[i])) {
                 remove(i);
                 --i;
             }
@@ -177,73 +217,79 @@ public class MyArrayList<E> implements List<E> {
     @Override
     public void clear() {
         size = 0;
+        items = Arrays.copyOf(items, 0);
+        ++modCount;
     }
 
     @Override
     public E get(int index) {
-        if (index >= size || index < 0)
-            throw new IllegalArgumentException(index + " - неверное значение индекса для списка длины " + size);
+        checkIndex(index, size - 1);
 
         return items[index];
     }
 
     @Override
-    public E set(int index, E element) {
-        if (index >= size || index < 0)
-            throw new IllegalArgumentException(index + " - неверное значение индекса для списка длины " + size);
+    public E set(int index, E item) {
+        checkIndex(index, size - 1);
 
-        E elementOldValue = items[index];
-        items[index] = element;
+        E oldItem = items[index];
+        items[index] = item;
 
-        return elementOldValue;
+        return oldItem;
     }
 
     @Override
-    public void add(int index, E element) {
-        if (index > size || index < 0)
-            throw new IllegalArgumentException(index + " - неверное значение индекса для списка длины " + size);
+    public void add(int index, E item) {
+        checkIndex(index, size);
+
+        if (size == items.length) {
+            increaseCapacity();
+        }
 
         if (index == size) {
-            add(element);
+            items[size] = item;
         } else {
-            if (size == items.length) {
-                increaseCapacity();
-            }
-
             System.arraycopy(items, index, items, index + 1, size - index);
-            items[index] = element;
-            ++size;
-            ++modCount;
+            items[index] = item;
         }
+
+        ++size;
+        ++modCount;
     }
 
     @Override
     public E remove(int index) {
-        if (index >= size || index < 0)
-            throw new IllegalArgumentException(index + " - неверное значение индекса для списка длины " + size);
+        checkIndex(index, size - 1);
 
-        if (index == size - 1) {
-            return removeLastElement();
-        } else {
-            E removedElementValue = items[index];
-            System.arraycopy(items, index + 1, items, index, size - index - 1);
-            --size;
-            ++modCount;
+        E removedItem = items[index];
+        items[index] = null;
+        System.arraycopy(items, index + 1, items, index, size - index - 1);
+        --size;
+        ++modCount;
 
-            return removedElementValue;
-        }
+        return removedItem;
     }
 
     @Override
     public int indexOf(Object o) {
-        int index = 0;
+        if (size == 0) {
+            return -1;
+        }
 
-        for (E element : this) {
-            if (element.equals(o)) {
-                return index;
+        if (o != null) {
+            for (int i = 0; i < size; ++i) {
+                if (items[i] != null) {
+                    if (items[i].equals(o)) {
+                        return i;
+                    }
+                }
             }
-
-            ++index;
+        } else {
+            for (int i = 0; i < size; ++i) {
+                if (items[i] == null) {
+                    return i;
+                }
+            }
         }
 
         return -1;
@@ -251,21 +297,24 @@ public class MyArrayList<E> implements List<E> {
 
     @Override
     public int lastIndexOf(Object o) {
-        int index = 0;
-        int lastIndex = 0;
-        boolean isContains = false;
-
-        for (E element : this) {
-            if (element.equals(o)) {
-                isContains = true;
-                lastIndex = index;
-            }
-
-            ++index;
+        if (size == 0) {
+            return -1;
         }
 
-        if (isContains) {
-            return lastIndex;
+        if (o != null) {
+            for (int i = size - 1; i >= 0; --i) {
+                if (items[i] != null) {
+                    if (items[i].equals(o)) {
+                        return i;
+                    }
+                }
+            }
+        } else {
+            for (int i = size - 1; i >= 0; --i) {
+                if (items[i] == null) {
+                    return i;
+                }
+            }
         }
 
         return -1;
@@ -288,19 +337,20 @@ public class MyArrayList<E> implements List<E> {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-
-        sb.append("[");
-
-        if (size != 0) {
-            for (int i = 0; i < size; ++i) {
-                sb.append(items[i]).append(", ");
-            }
-
-            sb.delete(sb.length() - 2, sb.length());
+        if (size == 0) {
+            return "{}";
         }
 
-        sb.append("]");
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("{");
+
+        for (int i = 0; i < size; ++i) {
+            sb.append(items[i]).append(", ");
+        }
+
+        sb.delete(sb.length() - 2, sb.length());
+        sb.append("}");
 
         return sb.toString();
     }

@@ -1,4 +1,4 @@
-package ru.academits.java.kononov.main;
+package ru.academits.java.kononov.my_array_list_main;
 
 import ru.academits.java.kononov.my_array_list.MyArrayList;
 
@@ -111,7 +111,8 @@ public class Main {
         System.out.println(Arrays.toString(array1));
 
         System.out.println("Получение из списка массива указанного типа");
-        Number[] array2 = list2.toArray(new Number[0]);
-        System.out.println(Arrays.toString(array2));
+        Number[] array3 = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+        list2.toArray(array3);
+        System.out.println(Arrays.toString(array3));
     }
 }
