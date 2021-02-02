@@ -1,6 +1,7 @@
 package ru.academits.java.kononov.singly_linked_list;
 
 import java.util.NoSuchElementException;
+import java.util.Objects;
 
 public class SinglyLinkedList<T> {
     private ListItem<T> head;
@@ -108,52 +109,26 @@ public class SinglyLinkedList<T> {
             return false;
         }
 
-        if (data == null) {
-            if (head.getData() == null) {
-                head = head.getNext();
-                --length;
-
-                return true;
-            }
-
-            ListItem<T> item = head.getNext();
-            ListItem<T> previousItem = head;
-
-            for (int i = 1; i < length; ++i) {
-                if (item.getData() == null) {
-                    previousItem.setNext(item.getNext());
-                    --length;
-
-                    return true;
-                }
-
-                previousItem = item;
-                item = item.getNext();
-            }
-        }
-
-        if (head.getData().equals(data)) {
+        if (Objects.equals(head.getData(), data)) {
             head = head.getNext();
             --length;
 
             return true;
         }
 
-        ListItem<T> item = head.getNext();
+        ListItem<T> currentItem = head.getNext();
         ListItem<T> previousItem = head;
 
         for (int i = 1; i < length; ++i) {
-            if (item.getData() != null) {
-                if (item.getData().equals(data)) {
-                    previousItem.setNext(item.getNext());
-                    --length;
+            if (Objects.equals(currentItem.getData(), data)) {
+                previousItem.setNext(currentItem.getNext());
+                --length;
 
-                    return true;
-                }
+                return true;
             }
 
-            previousItem = item;
-            item = item.getNext();
+            previousItem = currentItem;
+            currentItem = currentItem.getNext();
         }
 
         return false;
@@ -186,23 +161,29 @@ public class SinglyLinkedList<T> {
             return copy;
         }
 
-        ListItem<T> item = head;
-        copy.addFirst(item.getData());
+        ListItem<T> currentItem = head;
+        copy.addFirst(currentItem.getData());
 
         if (length == 1) {
             return copy;
         }
 
-        ListItem<T> nextItem = item.getNext();
-        copy.head.setNext(nextItem);
+        ListItem<T> nextItem = currentItem.getNext();
+        copy.head.setNext(new ListItem<>(nextItem.getData()));
 
-        item = item.getNext();
-        nextItem = item.getNext();
+        currentItem = currentItem.getNext();
+        nextItem = currentItem.getNext();
+
+        ListItem<T> copyPreviousNextItem = copy.head.getNext();
 
         for (int i = 2; i < length; ++i) {
-            new ListItem<>(item.getData(), nextItem);
-            item = item.getNext();
-            nextItem = item.getNext();
+            ListItem<T> copyNextItem = new ListItem<>(nextItem.getData());
+            new ListItem<>(currentItem.getData(), copyNextItem);
+            copyPreviousNextItem.setNext(copyNextItem);
+
+            currentItem = currentItem.getNext();
+            nextItem = currentItem.getNext();
+            copyPreviousNextItem = copyNextItem;
         }
 
         copy.length = length;
