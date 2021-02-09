@@ -168,22 +168,17 @@ public class SinglyLinkedList<T> {
             return copy;
         }
 
-        ListItem<T> nextItem = currentItem.getNext();
-        copy.head.setNext(new ListItem<>(nextItem.getData()));
-
-        currentItem = currentItem.getNext();
-        nextItem = currentItem.getNext();
-
-        ListItem<T> copyPreviousNextItem = copy.head.getNext();
+        ListItem<T> copyPreviousItem = copy.head;
 
         for (int i = 2; i < length; ++i) {
-            ListItem<T> copyNextItem = new ListItem<>(nextItem.getData());
-            new ListItem<>(currentItem.getData(), copyNextItem);
-            copyPreviousNextItem.setNext(copyNextItem);
-
             currentItem = currentItem.getNext();
-            nextItem = currentItem.getNext();
-            copyPreviousNextItem = copyNextItem;
+            ListItem<T> nextItem = currentItem.getNext();
+
+            ListItem<T> copyNextItem = new ListItem<>(nextItem.getData());
+            ListItem<T> copyCurrentItem = new ListItem<>(currentItem.getData(), copyNextItem);
+            copyPreviousItem.setNext(copyCurrentItem);
+
+            copyPreviousItem = copyCurrentItem;
         }
 
         copy.length = length;
