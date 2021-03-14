@@ -170,14 +170,10 @@ public class SinglyLinkedList<T> {
 
         ListItem<T> copyPreviousItem = copy.head;
 
-        for (int i = 2; i < length; ++i) {
+        for (int i = 1; i < length; ++i) {
             currentItem = currentItem.getNext();
-            ListItem<T> nextItem = currentItem.getNext();
-
-            ListItem<T> copyNextItem = new ListItem<>(nextItem.getData());
-            ListItem<T> copyCurrentItem = new ListItem<>(currentItem.getData(), copyNextItem);
+            ListItem<T> copyCurrentItem = new ListItem<>(currentItem.getData());
             copyPreviousItem.setNext(copyCurrentItem);
-
             copyPreviousItem = copyCurrentItem;
         }
 
