@@ -3,10 +3,11 @@ package ru.academits.java.kononov.my_array_list;
 import java.util.*;
 
 public class MyArrayList<E> implements List<E> {
+    private static final int DEFAULT_CAPACITY = 10;
+
     private E[] items;
     private int size;
     private int modCount;
-    private static final int DEFAULT_CAPACITY = 10;
 
     public MyArrayList() {
         //noinspection unchecked
@@ -47,10 +48,6 @@ public class MyArrayList<E> implements List<E> {
     }
 
     private void checkIndex(int index, int maxIndex) {
-        if (items.length == 0) {
-            throw new IndexOutOfBoundsException("Невозможно обратиться по индексу. Список пуст");
-        }
-
         if (index < 0 || index > maxIndex) {
             throw new IndexOutOfBoundsException(index + " - неверное значение индекса. Индекс должен находится в " +
                     "пределах от 0 до " + maxIndex);
@@ -205,7 +202,8 @@ public class MyArrayList<E> implements List<E> {
     @Override
     public boolean retainAll(Collection<?> c) {
         if (c.size() == 0) {
-            return false;
+            clear();
+            return true;
         }
 
         final int initialModCount = modCount;
@@ -222,7 +220,7 @@ public class MyArrayList<E> implements List<E> {
 
     @Override
     public void clear() {
-        for (int i = 0; i <= size; ++i) {
+        for (int i = 0; i < size; ++i) {
             items[i] = null;
         }
 
@@ -249,14 +247,10 @@ public class MyArrayList<E> implements List<E> {
 
     @Override
     public void add(int index, E item) {
-        if (items.length == 0 && index == 0) {
-            increaseCapacity();
-        } else {
-            checkIndex(index, size);
+        checkIndex(index, size);
 
-            if (size == items.length) {
-                increaseCapacity();
-            }
+        if (size == items.length) {
+            increaseCapacity();
         }
 
         if (index != size) {
