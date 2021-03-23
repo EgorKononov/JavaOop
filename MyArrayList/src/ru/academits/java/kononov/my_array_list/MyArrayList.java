@@ -56,7 +56,8 @@ public class MyArrayList<E> implements List<E> {
 
     private void increaseCapacity() {
         if (items.length == 0) {
-            items = Arrays.copyOf(items, DEFAULT_CAPACITY);
+            //noinspection unchecked
+            items = (E[]) new Object[DEFAULT_CAPACITY];
         } else {
             items = Arrays.copyOf(items, items.length * 2);
         }
@@ -162,9 +163,9 @@ public class MyArrayList<E> implements List<E> {
             return false;
         }
 
-        if (index == size) {
-            ensureCapacity(size + collectionSize);
-        } else {
+        ensureCapacity(size + collectionSize);
+
+        if (index != size) {
             System.arraycopy(items, index, items, index + collectionSize, size - index);
         }
 
@@ -202,8 +203,12 @@ public class MyArrayList<E> implements List<E> {
     @Override
     public boolean retainAll(Collection<?> c) {
         if (c.size() == 0) {
-            clear();
-            return true;
+            if (size == 0) {
+                return false;
+            } else {
+                clear();
+                return true;
+            }
         }
 
         final int initialModCount = modCount;
