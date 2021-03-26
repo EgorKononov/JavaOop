@@ -205,10 +205,10 @@ public class MyArrayList<E> implements List<E> {
         if (c.size() == 0) {
             if (size == 0) {
                 return false;
-            } else {
-                clear();
-                return true;
             }
+
+            clear();
+            return true;
         }
 
         final int initialModCount = modCount;
