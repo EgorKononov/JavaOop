@@ -3,30 +3,30 @@ package ru.academits.java.kononov.temperatureconverter.publisher;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ConvertedTemperaturePublisher implements Publisher {
-    private List<Listener> listeners;
+public class ConvertedTemperaturePublisher implements ConvertedTemperaturePublisherInterface {
+    private final List<ConvertedTemperatureListener> convertedTemperatureListeners;
 
     public ConvertedTemperaturePublisher() {
-        listeners = new ArrayList<>();
+        convertedTemperatureListeners = new ArrayList<>();
     }
 
     @Override
-    public void subscribeListener(Listener listener) {
-        listeners.add(listener);
+    public void subscribeListener(ConvertedTemperatureListener convertedTemperatureListener) {
+        convertedTemperatureListeners.add(convertedTemperatureListener);
     }
 
     @Override
-    public void unsubscribeListener(Listener listener) {
-        int i = listeners.indexOf(listener);
+    public void unsubscribeListener(ConvertedTemperatureListener convertedTemperatureListener) {
+        int i = convertedTemperatureListeners.indexOf(convertedTemperatureListener);
 
         if (i != -1) {
-            listeners.remove(i);
+            convertedTemperatureListeners.remove(i);
         }
     }
 
     @Override
     public void notifyListeners(double convertedTemperature) {
-        for (Listener l : listeners){
+        for (ConvertedTemperatureListener l : convertedTemperatureListeners) {
             l.update(convertedTemperature);
         }
     }

@@ -1,5 +1,5 @@
 package ru.academits.java.kononov.temperatureconverter.publisher;
 
-public interface Listener {
+public interface ConvertedTemperatureListener {
     void update(double convertedTemperature);
 }
