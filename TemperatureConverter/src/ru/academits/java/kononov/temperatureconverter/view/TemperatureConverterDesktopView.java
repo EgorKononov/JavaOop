@@ -2,7 +2,7 @@ package ru.academits.java.kononov.temperatureconverter.view;
 
 import ru.academits.java.kononov.temperatureconverter.controller.TemperatureConverterControllerInterface;
 import ru.academits.java.kononov.temperatureconverter.model.scales.ScaleType;
-import ru.academits.java.kononov.temperatureconverter.publisher.Listener;
+import ru.academits.java.kononov.temperatureconverter.publisher.ConvertedTemperatureListener;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
@@ -12,13 +12,14 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TemperatureConverterDesktopView implements TemperatureConverterView, Listener {
+public class TemperatureConverterDesktopView implements TemperatureConverterView, ConvertedTemperatureListener {
     private static final DecimalFormat CONVERTED_TEMPERATURE_FORMAT = new DecimalFormat("##.00");
-    private static final Dimension MAIN_WINDOW_MINIMUM_SIZE = new Dimension(600, 245);
-    private static final Dimension PANELS_SIZE = new Dimension(160, 130);
     private static final int TEMPERATURE_FIELD_WIDTH = 15;
 
     private final TemperatureConverterControllerInterface temperatureConverterController;
+    private final ScaleType[] scaleTypes = ScaleType.values();
+    private final Dimension panelsSize = new Dimension(160, 33 * (scaleTypes.length + 1));
+
     private JFrame frame;
     private JTextField initialTemperatureField;
     private JTextField convertedTemperatureField;
@@ -41,8 +42,6 @@ public class TemperatureConverterDesktopView implements TemperatureConverterView
 
             frame = new JFrame("Конвертер температур");
             frame.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
-            frame.setMinimumSize(MAIN_WINDOW_MINIMUM_SIZE);
-            frame.setLocationRelativeTo(null);
             frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
             JPanel initialTemperaturePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -52,8 +51,6 @@ public class TemperatureConverterDesktopView implements TemperatureConverterView
             initialTemperatureField = new JTextField(TEMPERATURE_FIELD_WIDTH);
             initialTemperaturePanel.add(initialTemperatureField);
 
-            ScaleType[] scaleTypes = ScaleType.values();
-
             List<JRadioButton> initialTemperatureScalesButtons = new ArrayList<>();
             initialTemperatureScalesButtonGroup = new ButtonGroup();
             createScalesButtons(initialTemperaturePanel, initialTemperatureScalesButtonGroup,
@@ -61,7 +58,7 @@ public class TemperatureConverterDesktopView implements TemperatureConverterView
 
             JButton convertButton = new JButton("ПЕРЕВЕСТИ");
             convertButton.addActionListener(e -> {
-                convert();
+                convertTemperature();
                 isConvertExecuted = true;
             });
 
@@ -82,14 +79,16 @@ public class TemperatureConverterDesktopView implements TemperatureConverterView
             frame.add(initialTemperaturePanel);
             frame.add(convertButton);
             frame.add(convertedTemperaturePanel);
+            frame.pack();
+            frame.setLocationRelativeTo(null);
             frame.setVisible(true);
         });
     }
 
     private void setPanelSizes(JComponent component) {
-        component.setPreferredSize(PANELS_SIZE);
-        component.setMinimumSize(PANELS_SIZE);
-        component.setMaximumSize(PANELS_SIZE);
+        component.setPreferredSize(panelsSize);
+        component.setMinimumSize(panelsSize);
+        component.setMaximumSize(panelsSize);
     }
 
     private void addPanelBorder(JPanel panel, String borderTitle) {
@@ -123,16 +122,19 @@ public class TemperatureConverterDesktopView implements TemperatureConverterView
     private void addActionListener(JRadioButton radioButton) {
         radioButton.addActionListener(e -> {
             if (isConvertExecuted) {
-                convert();
+                convertTemperature();
             }
         });
     }
 
-    private void convert() {//TODO exception на parseDouble
-        temperatureConverterController.convertTemperature(Double.parseDouble(initialTemperatureField.getText()),
-                initialTemperatureScalesButtonGroup.getSelection().getActionCommand(),
-                convertedTemperatureScalesButtonGroup.getSelection().getActionCommand());
-        isConvertExecuted = true;
+    private void convertTemperature() {
+        try {
+            temperatureConverterController.convertTemperature(Double.parseDouble(initialTemperatureField.getText()),
+                    initialTemperatureScalesButtonGroup.getSelection().getActionCommand(),
+                    convertedTemperatureScalesButtonGroup.getSelection().getActionCommand());
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(frame, "Необходимо ввести число в поле \"Исходная температура\"");
+        }
     }
 
     @Override

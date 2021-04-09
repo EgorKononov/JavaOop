@@ -5,14 +5,14 @@ import ru.academits.java.kononov.temperatureconverter.controller.TemperatureConv
 import ru.academits.java.kononov.temperatureconverter.model.TemperatureConverterModel;
 import ru.academits.java.kononov.temperatureconverter.model.TemperatureConverterModelInterface;
 import ru.academits.java.kononov.temperatureconverter.publisher.ConvertedTemperaturePublisher;
-import ru.academits.java.kononov.temperatureconverter.publisher.Listener;
-import ru.academits.java.kononov.temperatureconverter.publisher.Publisher;
+import ru.academits.java.kononov.temperatureconverter.publisher.ConvertedTemperatureListener;
+import ru.academits.java.kononov.temperatureconverter.publisher.ConvertedTemperaturePublisherInterface;
 import ru.academits.java.kononov.temperatureconverter.view.TemperatureConverterDesktopView;
 import ru.academits.java.kononov.temperatureconverter.view.TemperatureConverterView;
 
 public class Main {
     public static void main(String[] args) {
-        Publisher convertedTemperaturePublisher = new ConvertedTemperaturePublisher();
+        ConvertedTemperaturePublisherInterface convertedTemperaturePublisher = new ConvertedTemperaturePublisher();
 
         TemperatureConverterModelInterface temperatureConverterModel =
                 new TemperatureConverterModel(convertedTemperaturePublisher);
@@ -21,7 +21,8 @@ public class Main {
                 new TemperatureConverterController(temperatureConverterModel);
 
         TemperatureConverterView desktopView = new TemperatureConverterDesktopView(temperatureConverterController);
-        convertedTemperaturePublisher.subscribeListener((Listener) desktopView);
+        convertedTemperaturePublisher.subscribeListener((ConvertedTemperatureListener) desktopView);
+
         desktopView.start();
     }
 }
